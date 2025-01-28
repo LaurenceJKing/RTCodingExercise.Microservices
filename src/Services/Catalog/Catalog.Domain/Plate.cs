@@ -9,6 +9,7 @@
         public decimal PurchasePrice { get; set; }
 
         public decimal SalePrice { get; set; }
+        public decimal SalePriceWithMarkup => SalePrice * 1.2m;
 
         public string? Letters { get; set; }
 
