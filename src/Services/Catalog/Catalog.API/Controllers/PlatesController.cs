@@ -15,9 +15,11 @@ namespace Catalog.API.Controllers
             _db = db;
         }
 
-        public async Task<IActionResult> Index(int pageNumber, int pageSize = 20)
+        public async Task<IActionResult> Index(int pageNumber, int pageSize = 20, string sortBy = null, string sortOrder = "asc")
         {
-            var plates = await _db.Plates.ToPagedListAsync(pageNumber, pageSize);
+            var plates = await _db.Plates
+                .OrderBy(sortBy, sortOrder)
+                .ToPagedListAsync(pageNumber, pageSize);
             return Ok(plates);
         }
 

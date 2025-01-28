@@ -112,8 +112,26 @@ namespace Catalog.UnitTests
             secondPage.Items.Should().NotContainEquivalentOf(firstPage.Items);
         }
 
+        [Fact]
+        public async Task CanSortPlatesByPrice()
+        {
+            var plates = _fixture.CreateMany<Plate>(10);
+            _databaseTestFixture.Database.Plates.AddRange(plates);
+            _databaseTestFixture.Database.SaveChanges();
 
+            var getPlatesResponse = await SUT.Index(
+                pageNumber: 1,
+                pageSize: 10,
+                sortBy: nameof(Plate.SalePrice),
+                sortOrder: "desc");
 
+            var sortedPlates = getPlatesResponse
+                .Should().BeOfType<OkObjectResult>()
+                .Which.Value
+                .Should().BeOfType<PaginatedList<Plate>>().Subject;
 
+            sortedPlates.Items.Should().BeInDescendingOrder(p => p.SalePrice);
+
+        }
     }
 }
